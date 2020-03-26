@@ -441,7 +441,7 @@ PortMatrix::popup_menu (BundleChannel column, BundleChannel row, uint32_t t)
 						sub.push_back (MenuElem (buf, sigc::bind (sigc::mem_fun (*this, &PortMatrix::add_channel_proxy), w, *i)));
 					}
 				}
-				
+
 				/* Now add other ones */
 				for (DataType::iterator i = DataType::begin(); i != DataType::end(); ++i) {
 					if (!should_show (*i)) {
@@ -488,12 +488,12 @@ PortMatrix::popup_menu (BundleChannel column, BundleChannel row, uint32_t t)
 				/* we're looking just at bundles, or our bundle has only one channel, so just offer
 				   to disassociate all on the bundle.
 				*/
-				
+
 				snprintf (buf, sizeof (buf), _("%s all"), disassociation_verb().c_str());
 				sub.push_back (
 					MenuElem (buf, sigc::bind (sigc::mem_fun (*this, &PortMatrix::disassociate_all_on_bundle), w, dim))
 					);
-					
+
 			} else if (c != 0) {
 
 				if (bc[dim].channel != -1) {
@@ -534,7 +534,7 @@ PortMatrix::popup_menu (BundleChannel column, BundleChannel row, uint32_t t)
 
 	items.push_back (MenuElem (_("Flip"), sigc::mem_fun (*this, &PortMatrix::flip)));
 	items.back().set_sensitive (can_flip ());
-	
+
 	_menu->popup (1, t);
 }
 
@@ -624,7 +624,7 @@ PortMatrix::setup_global_ports_proxy ()
 	/* Avoid a deadlock by calling this in an idle handler: see IOSelector::io_changed_proxy
 	   for a discussion.
 	*/
-		
+
 	Glib::signal_idle().connect_once (sigc::mem_fun (*this, &PortMatrix::setup_global_ports));
 }
 
@@ -707,7 +707,7 @@ PortMatrix::io_from_bundle (boost::shared_ptr<Bundle> b) const
 bool
 PortMatrix::can_add_channels (boost::shared_ptr<Bundle> b) const
 {
-	return io_from_bundle (b);
+	return io_from_bundle (b).get() != 0;
 }
 
 void
@@ -730,7 +730,7 @@ PortMatrix::add_channel (boost::shared_ptr<Bundle> b, DataType t)
 bool
 PortMatrix::can_remove_channels (boost::shared_ptr<Bundle> b) const
 {
-	return io_from_bundle (b);
+	return io_from_bundle (b).get() != 0;
 }
 
 void
@@ -925,7 +925,7 @@ PortMatrix::visible_ports (int d) const
 	   the TOP_TO_RIGHT arrangement we reverse the order of the vertical
 	   tabs in setup_notebooks ().
 	*/
-	   
+
 	int n = 0;
 	if (d == _row_index) {
 		if (_arrangement == LEFT_TO_BOTTOM) {
@@ -997,11 +997,11 @@ PortMatrix::update_tab_highlighting ()
 	if (!_session) {
 		return;
 	}
-	
+
 	for (int i = 0; i < 2; ++i) {
 
 		Gtk::Notebook* notebook = row_index() == i ? &_vnotebook : &_hnotebook;
-		
+
 		PortGroupList const * gl = ports (i);
 		int p = 0;
 		for (PortGroupList::List::const_iterator j = gl->begin(); j != gl->end(); ++j) {
@@ -1156,7 +1156,7 @@ pair<int, int>
 PortMatrix::check_flip () const
 {
 	/* Look for the row's port group name in the columns */
-	
+
 	int new_column = 0;
 	boost::shared_ptr<const PortGroup> r = visible_ports (_row_index);
 	PortGroupList::List::const_iterator i = _ports[_column_index].begin();
@@ -1170,7 +1170,7 @@ PortMatrix::check_flip () const
 	}
 
 	/* Look for the column's port group name in the rows */
-	
+
 	int new_row = 0;
 	boost::shared_ptr<const PortGroup> c = visible_ports (_column_index);
 	i = _ports[_row_index].begin();

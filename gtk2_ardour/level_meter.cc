@@ -433,7 +433,8 @@ LevelMeterBase::set_type(MeterType t)
 bool
 LevelMeterBase::meter_button_press (GdkEventButton* ev)
 {
-	return ButtonPress (ev); /* EMIT SIGNAL */
+	if (ButtonPress (ev)) return true; /* EMIT SIGNAL */ // TODO: check!
+	return false;
 }
 
 bool

@@ -198,7 +198,7 @@ FFTGraph::draw_scales(Glib::RefPtr<Gdk::Window> window)
 
 
 
-	if (graph_gc == 0) {
+	if (graph_gc.get() == 0) {
 		graph_gc = GC::create( get_window() );
 	}
 
@@ -208,7 +208,7 @@ FFTGraph::draw_scales(Glib::RefPtr<Gdk::Window> window)
 
 	graph_gc->set_rgb_fg_color( grey );
 
-	if (layout == 0) {
+	if (layout.get() == 0) {
 		layout = create_pango_layout ("");
 		layout->set_font_description (get_style()->get_font());
 	}
@@ -480,4 +480,3 @@ FFTGraph::update_size()
 		_logScale[i] = (int)floor(pixel);
 	}
 }
-

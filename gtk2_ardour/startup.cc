@@ -81,34 +81,39 @@ ArdourStartup::ArdourStartup ()
 	set_keep_above (true);
 	set_position (WIN_POS_CENTER);
 	set_border_width (12);
-	
-	if ((icon_pixbuf = ::get_icon ("ardour_icon_48px")) == 0) {
+
+	icon_pixbuf = ::get_icon ("ardour_icon_48px");
+	if (not icon_pixbuf) {
 		throw failed_constructor();
 	}
-	
+
 	list<Glib::RefPtr<Gdk::Pixbuf> > window_icons;
 	Glib::RefPtr<Gdk::Pixbuf> icon;
-	
-	if ((icon = ::get_icon ("ardour_icon_16px")) != 0) {
+
+	icon = ::get_icon ("ardour_icon_16px");
+	if (icon) {
 		window_icons.push_back (icon);
 	}
-	if ((icon = ::get_icon ("ardour_icon_22px")) != 0) {
+	icon = ::get_icon ("ardour_icon_22px");
+	if (icon) {
 		window_icons.push_back (icon);
 	}
-	if ((icon = ::get_icon ("ardour_icon_32px")) != 0) {
+	icon = ::get_icon ("ardour_icon_32px");
+	if (icon) {
 		window_icons.push_back (icon);
 	}
-	if ((icon = ::get_icon ("ardour_icon_48px")) != 0) {
+	icon = ::get_icon ("ardour_icon_48px");
+	if (icon) {
 		window_icons.push_back (icon);
 	}
 	if (!window_icons.empty ()) {
 		set_default_icon_list (window_icons);
 	}
-	
+
 #ifdef __APPLE__
 	setup_prerelease_page ();
 #endif
-	
+
 	setup_new_user_page ();
 	setup_first_time_config_page ();
 	setup_monitoring_choice_page ();
@@ -161,7 +166,7 @@ Full information on all the above can be found on the support page at\n\
 	vbox->set_border_width (12);
 	vbox->pack_start (*label, false, false, 12);
 	vbox->show_all ();
-	
+
 	append_page (*vbox);
 	set_page_type (*vbox, ASSISTANT_PAGE_CONTENT);
 	set_page_title (*vbox, _("This is a BETA RELEASE"));
@@ -209,7 +214,7 @@ ArdourStartup::default_dir_changed ()
 {
 	Config->set_default_session_parent_dir (default_dir_chooser->get_filename());
 	// make new session folder chooser point to the new default
-	new_folder_chooser.set_current_folder (Config->get_default_session_parent_dir());	
+	new_folder_chooser.set_current_folder (Config->get_default_session_parent_dir());
 	config_changed ();
 }
 
@@ -377,7 +382,7 @@ void
 ArdourStartup::setup_final_page ()
 {
 	string msg = string_compose (_("%1 is ready for use"), PROGRAM_NAME);
-	
+
 	final_page.set_markup (string_compose ("<span weight=\"bold\" size=\"large\">%1</span>", msg));
 	final_page.show ();
 	final_page_index = append_page (final_page);
@@ -429,7 +434,7 @@ ArdourStartup::on_apply ()
 		ofstream fout (been_here_before_path().c_str());
 
 	}
-		
+
 	_response = RESPONSE_OK;
 	gtk_main_quit ();
 }
@@ -440,6 +445,3 @@ ArdourStartup::move_along_now ()
 {
 	on_apply ();
 }
-
-
-		

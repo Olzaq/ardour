@@ -121,7 +121,7 @@ EditorRegions::EditorRegions (Editor* e)
 		{ 10, _("O"),  _("Region opaque (blocks regions below it from being heard)?") },
 		{ -1, 0, 0 }
 	};
-	
+
 	for (int i = 0; ci[i].index >= 0; ++i) {
 		col = _display.get_column (ci[i].index);
 		l = manage (new Label (ci[i].label));
@@ -132,7 +132,7 @@ EditorRegions::EditorRegions (Editor* e)
 		if (ci[i].index > 6) {
 			col->set_expand (false);
 			col->set_alignment (ALIGN_CENTER);
-		} 
+		}
 	}
 
 	_display.set_headers_visible (true);
@@ -294,7 +294,7 @@ EditorRegions::add_region (boost::shared_ptr<Region> region)
 	string str;
 	TreeModel::Row row;
 	Gdk::Color c;
-	bool missing_source = boost::dynamic_pointer_cast<SilentFileSource>(region->source());
+	bool missing_source = boost::dynamic_pointer_cast<SilentFileSource>(region->source()).get() != 0;
 
 	if (!_show_automatic_regions && region->automatic()) {
 		return;
@@ -429,7 +429,7 @@ EditorRegions::add_region (boost::shared_ptr<Region> region)
 			*/
 
 			row = *(_model->insert (subrows.end()));
-			
+
 		} else {
 			row = *(_model->append());
 		}
@@ -565,7 +565,7 @@ EditorRegions::selection_changed ()
 					_change_connection.block (false);
 				}
 			}
-			
+
 		}
 	} else {
 		_editor->get_selection().clear_regions ();

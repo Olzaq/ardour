@@ -361,7 +361,7 @@ SessionOptionEditor::parameter_changed (std::string const & p)
 bool
 SessionOptionEditor::set_use_monitor_section (bool yn)
 {
-	bool had_monitor_section = _session->monitor_out();
+	bool had_monitor_section = _session->monitor_out().get() != 0;
 
 	if (yn) {
 		_session->add_monitor_section ();
@@ -370,7 +370,7 @@ SessionOptionEditor::set_use_monitor_section (bool yn)
 	}
 
 	/* store this choice for any new sessions */
-	
+
 	Config->set_use_monitor_bus (yn);
 
 	return had_monitor_section != yn;

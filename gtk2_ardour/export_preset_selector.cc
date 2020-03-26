@@ -123,9 +123,10 @@ ExportPresetSelector::update_selection ()
 		}
 	}
 
-	save_button.set_sensitive (current);
-	remove_button.set_sensitive (current);
+	save_button.set_sensitive (current.get() != 0);
+	remove_button.set_sensitive (current.get() != 0);
 	new_button.set_sensitive (!current && !text.empty() && !preset_name_exists);
+
 }
 
 void

@@ -228,7 +228,7 @@ ARDOUR_UI::set_session (Session *s)
 			meter_box.show();
 			editor_meter_peak_display.show();
 		}
-	} 
+	}
 }
 
 int
@@ -329,7 +329,7 @@ ARDOUR_UI::goto_mixer_window ()
 {
 	Glib::RefPtr<Gdk::Window> win;
 	Glib::RefPtr<Gdk::Screen> screen;
-	
+
 	if (editor) {
 		win = editor->get_window ();
 	}
@@ -339,7 +339,7 @@ ARDOUR_UI::goto_mixer_window ()
 	} else {
 		screen = Gdk::Screen::get_default();
 	}
-	
+
 	if (g_getenv ("ARDOUR_LOVES_STUPID_TINY_SCREENS") == 0 && screen && screen->get_height() < 700) {
 		Gtk::MessageDialog msg (_("This screen is not tall enough to display the mixer window"));
 		msg.run ();
@@ -393,19 +393,19 @@ ARDOUR_UI::toggle_editor_mixer ()
 	bool obscuring = false;
 	/* currently, if windows are on different
 	   screens then we do nothing; but in the
-	   future we may want to bring the window 
-	   to the front or something, so I'm leaving this 
+	   future we may want to bring the window
+	   to the front or something, so I'm leaving this
 	   variable for future use
 	*/
-        bool same_screen = true; 
-	
+        bool same_screen = true;
+
         if (editor && mixer) {
 
 		/* remeber: Screen != Monitor (Screen is a separately rendered
 		 * continuous geometry that make include 1 or more monitors.
 		 */
-		
-                if (editor->get_screen() != mixer->get_screen() && (mixer->get_screen() != 0) && (editor->get_screen() != 0)) {
+
+                if (editor->get_screen() != mixer->get_screen() && (mixer->get_screen()) && (editor->get_screen())) {
                         // different screens, so don't do anything
                         same_screen = false;
                 } else {

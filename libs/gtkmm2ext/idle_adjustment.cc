@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2000-2007 Paul Davis 
+    Copyright (C) 2000-2007 Paul Davis
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #define _BSD_SOURCE
 #include <gtkmm2ext/idle_adjustment.h>
 #include <gtkmm/main.h>
+#include <glibmm/main.h>
 #include <iostream>
 
 using namespace Gtk;
@@ -41,14 +42,14 @@ void
 IdleAdjustment::underlying_adjustment_value_changed ()
 {
 	gettimeofday (&last_vc, 0);
-	
+
 	if (timeout_queued) {
 		return;
 	}
 
 	Glib::signal_timeout().connect(mem_fun(*this, &IdleAdjustment::timeout_handler), 250);
 	timeout_queued = true;
-}	
+}
 
 gint
 IdleAdjustment::timeout_handler ()

@@ -274,7 +274,7 @@ ActionManager::get_action (const char* path)
 	*slash = '\0';
 
 	return get_action (copy, ++slash);
-	
+
 }
 
 RefPtr<Action>
@@ -284,7 +284,7 @@ ActionManager::get_action (const char* group_name, const char* action_name)
 	   gtkmm2.6, so we fall back to the C level.
 	*/
 
-	if (ui_manager == 0) {
+	if (not ui_manager) {
 		return RefPtr<Action> ();
 	}
 
@@ -360,7 +360,7 @@ void
 ActionManager::set_toggleaction_state (string n, bool s)
 {
 	char const * name = n.c_str ();
-	
+
 	const char *last_slash = strrchr (name, '/');
 
 	if (last_slash == 0) {
@@ -393,13 +393,13 @@ string
 ActionManager::get_key_representation (const string& accel_path, AccelKey& key)
 {
 	bool known = lookup_entry (accel_path, key);
-	
+
 	if (known) {
 		uint32_t k = possibly_translate_legal_accelerator_to_real_key (key.get_key());
 		key = AccelKey (k, Gdk::ModifierType (key.get_mod()));
 		return ui_manager->get_accel_group()->get_label (key.get_key(), Gdk::ModifierType (key.get_mod()));
-	} 
-	
+	}
+
 	return unbound_string;
 }
 
@@ -423,4 +423,3 @@ ActionManager::set_toggle_action (const char* group, const char*action, bool yn)
 		}
 	}
 }
-

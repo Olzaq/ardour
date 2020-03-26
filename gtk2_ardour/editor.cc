@@ -213,7 +213,7 @@ pane_size_watcher (Paned* pane)
 
 	      X: hard to access
 	      Quartz: impossible to access
-	      
+
 	   so stop that by preventing it from ever getting too narrow. 35
 	   pixels is basically a rough guess at the tab width.
 
@@ -670,16 +670,20 @@ Editor::Editor ()
 	list<Glib::RefPtr<Gdk::Pixbuf> > window_icons;
 	Glib::RefPtr<Gdk::Pixbuf> icon;
 
-	if ((icon = ::get_icon ("ardour_icon_16px")) != 0) {
+	icon = ::get_icon ("ardour_icon_16px");
+	if (icon) {
 		window_icons.push_back (icon);
 	}
-	if ((icon = ::get_icon ("ardour_icon_22px")) != 0) {
+	icon = ::get_icon ("ardour_icon_22px");
+	if (icon) {
 		window_icons.push_back (icon);
 	}
-	if ((icon = ::get_icon ("ardour_icon_32px")) != 0) {
+	icon = ::get_icon ("ardour_icon_32px");
+	if (icon) {
 		window_icons.push_back (icon);
 	}
-	if ((icon = ::get_icon ("ardour_icon_48px")) != 0) {
+	icon = ::get_icon ("ardour_icon_48px");
+	if (icon) {
 		window_icons.push_back (icon);
 	}
 	if (!window_icons.empty()) {
@@ -699,7 +703,7 @@ Editor::Editor ()
 	signal_delete_event().connect (sigc::mem_fun (*ARDOUR_UI::instance(), &ARDOUR_UI::exit_on_main_window_close));
 
 	Gtkmm2ext::Keyboard::the_keyboard().ZoomVerticalModifierReleased.connect (sigc::mem_fun (*this, &Editor::zoom_vertical_modifier_released));
-	
+
 	/* allow external control surfaces/protocols to do various things */
 
 	ControlProtocol::ZoomToSession.connect (*this, invalidator (*this), boost::bind (&Editor::temporal_zoom_session, this), gui_context());
@@ -913,7 +917,7 @@ Editor::zoom_adjustment_changed ()
 
 	double fpu = zoom_range_clock->current_duration() / _canvas_width;
 	bool clamped = clamp_frames_per_unit (fpu);
-	
+
 	if (clamped) {
 		zoom_range_clock->set ((framepos_t) floor (fpu * _canvas_width));
 	}
@@ -958,12 +962,12 @@ Editor::control_unselect ()
 }
 
 void
-Editor::control_select (uint32_t rid, Selection::Operation op) 
+Editor::control_select (uint32_t rid, Selection::Operation op)
 {
 	/* handles the (static) signal from the ControlProtocol class that
 	 * requests setting the selected track to a given RID
 	 */
-	 
+
 	if (!_session) {
 		return;
 	}
@@ -1356,18 +1360,18 @@ Editor::fill_xfade_menu (Menu_Helpers::MenuList& items, bool start)
 			sigc::bind (sigc::mem_fun (*this, emf), FadeLinear)
 			)
 		);
-	
+
 	dynamic_cast<ImageMenuItem*>(&items.back())->set_always_show_image ();
-	
+
 	items.push_back (
 		ImageMenuElem (
 			_("Constant power"),
 			*(*images)[FadeConstantPower],
 			sigc::bind (sigc::mem_fun (*this, emf), FadeConstantPower)
 			));
-	
+
 	dynamic_cast<ImageMenuItem*>(&items.back())->set_always_show_image ();
-	
+
 	items.push_back (
 		ImageMenuElem (
 			_("Symmetric"),
@@ -1375,25 +1379,25 @@ Editor::fill_xfade_menu (Menu_Helpers::MenuList& items, bool start)
 			sigc::bind (sigc::mem_fun (*this, emf), FadeSymmetric)
 			)
 		);
-	
+
 	dynamic_cast<ImageMenuItem*>(&items.back())->set_always_show_image ();
-	
+
 	items.push_back (
 		ImageMenuElem (
 			_("Slow"),
 			*(*images)[FadeSlow],
 			sigc::bind (sigc::mem_fun (*this, emf), FadeSlow)
 			));
-	
+
 	dynamic_cast<ImageMenuItem*>(&items.back())->set_always_show_image ();
-	
+
 	items.push_back (
 		ImageMenuElem (
 			_("Fast"),
 			*(*images)[FadeFast],
 			sigc::bind (sigc::mem_fun (*this, emf), FadeFast)
 			));
-	
+
 	dynamic_cast<ImageMenuItem*>(&items.back())->set_always_show_image ();
 }
 
@@ -1451,16 +1455,16 @@ Editor::popup_fade_context_menu (int button, int32_t time, ArdourCanvas::Item* i
 		} else {
 			items.push_back (MenuElem (_("Activate"), sigc::bind (sigc::mem_fun (*this, &Editor::set_fade_in_active), true)));
 		}
-		
+
 		items.push_back (SeparatorElem());
-		
+
 		if (Profile->get_sae()) {
-			
+
 			items.push_back (MenuElem (_("Linear"), sigc::bind (sigc::mem_fun (*this, &Editor::set_fade_in_shape), FadeLinear)));
 			items.push_back (MenuElem (_("Slowest"), sigc::bind (sigc::mem_fun (*this, &Editor::set_fade_in_shape), FadeFast)));
-			
+
 		} else {
-			
+
 			items.push_back (
 				ImageMenuElem (
 					_("Linear"),
@@ -1468,34 +1472,34 @@ Editor::popup_fade_context_menu (int button, int32_t time, ArdourCanvas::Item* i
 					sigc::bind (sigc::mem_fun (*this, &Editor::set_fade_in_shape), FadeLinear)
 					)
 				);
-				
+
 			dynamic_cast<ImageMenuItem*>(&items.back())->set_always_show_image ();
-				
+
 			items.push_back (
 				ImageMenuElem (
 					_("Slow"),
 					*_fade_in_images[FadeSlow],
 					sigc::bind (sigc::mem_fun (*this, &Editor::set_fade_in_shape), FadeSlow)
 					));
-				
+
 			dynamic_cast<ImageMenuItem*>(&items.back())->set_always_show_image ();
-				
+
 			items.push_back (
 				ImageMenuElem (
 					_("Fast"),
 					*_fade_in_images[FadeFast],
 					sigc::bind (sigc::mem_fun (*this, &Editor::set_fade_in_shape), FadeFast)
 					));
-				
+
 			dynamic_cast<ImageMenuItem*>(&items.back())->set_always_show_image ();
-				
+
 			items.push_back (
 				ImageMenuElem (
 					_("Symmetric"),
 					*_fade_in_images[FadeSymmetric],
 					sigc::bind (sigc::mem_fun (*this, &Editor::set_fade_in_shape), FadeSymmetric)
 					));
-				
+
 			items.push_back (
 				ImageMenuElem (
 					_("Constant power"),
@@ -2107,7 +2111,7 @@ Editor::set_snap_to (SnapType st)
 	case SnapToBeatDiv2: {
 		ARDOUR::TempoMap::BBTPointList::const_iterator current_bbt_points_begin;
 		ARDOUR::TempoMap::BBTPointList::const_iterator current_bbt_points_end;
-		
+
 		compute_current_bbt_points (leftmost_frame, leftmost_frame + current_page_frames(),
 					    current_bbt_points_begin, current_bbt_points_end);
 		compute_bbt_ruler_scale (leftmost_frame, leftmost_frame + current_page_frames(),
@@ -3308,7 +3312,7 @@ Editor::duplicate_range (bool with_dialog)
 	} else if (get_smart_mode()) {
 		if (selection->time.length()) {
 			duplicate_selection (times);
-		} else 
+		} else
 			duplicate_some_regions (rs, times);
 	} else {
 		duplicate_some_regions (rs, times);
@@ -3655,8 +3659,8 @@ Editor::pane_allocation_handler (Allocation &alloc, Paned* which)
 void
 Editor::detach_tearoff (Box* /*b*/, Window* /*w*/)
 {
-	if ((_tools_tearoff->torn_off() || !_tools_tearoff->visible()) && 
-	    (_mouse_mode_tearoff->torn_off() || !_mouse_mode_tearoff->visible()) && 
+	if ((_tools_tearoff->torn_off() || !_tools_tearoff->visible()) &&
+	    (_mouse_mode_tearoff->torn_off() || !_mouse_mode_tearoff->visible()) &&
 	    (_zoom_tearoff->torn_off() || !_zoom_tearoff->visible())) {
 		top_hbox.remove (toolbar_frame);
 	}
@@ -4129,7 +4133,7 @@ Editor::current_visual_state (bool with_tracks)
 	vs->leftmost_frame = leftmost_frame;
 	vs->zoom_focus = zoom_focus;
 
-	if (with_tracks) {	
+	if (with_tracks) {
 		*vs->gui_state = *ARDOUR_UI::instance()->gui_object_state;
 	}
 
@@ -4188,11 +4192,11 @@ Editor::use_visual_state (VisualState& vs)
 
 	set_zoom_focus (vs.zoom_focus);
 	reposition_and_zoom (vs.leftmost_frame, vs.frames_per_unit);
-	
+
 	if (vs.gui_state) {
 		*ARDOUR_UI::instance()->gui_object_state = *vs.gui_state;
-		
-		for (TrackViewList::iterator i = track_views.begin(); i != track_views.end(); ++i) {	
+
+		for (TrackViewList::iterator i = track_views.begin(); i != track_views.end(); ++i) {
 			(*i)->reset_visual_state ();
 		}
 	}
@@ -4288,7 +4292,7 @@ Editor::idle_visual_changer ()
 
 	pending_visual_change.idle_handler_id = -1;
 	pending_visual_change.being_handled = true;
-	
+
 	VisualChange::Type p = pending_visual_change.pending;
 	pending_visual_change.pending = (VisualChange::Type) 0;
 
@@ -4301,7 +4305,7 @@ Editor::idle_visual_changer ()
 
 		ARDOUR::TempoMap::BBTPointList::const_iterator current_bbt_points_begin;
 		ARDOUR::TempoMap::BBTPointList::const_iterator current_bbt_points_end;
-		
+
 		compute_current_bbt_points (pending_visual_change.time_origin, pending_visual_change.time_origin + current_page_frames(),
 					    current_bbt_points_begin, current_bbt_points_end);
 		compute_bbt_ruler_scale (pending_visual_change.time_origin, pending_visual_change.time_origin + current_page_frames(),
@@ -4575,13 +4579,13 @@ Editor::get_regions_from_selection_and_edit_point ()
 			/* tracks is empty (no track selected), and 'No Selection = All Tracks'
 			 * is enabled, so consider all tracks
 			 */
-			tracks = track_views; 
+			tracks = track_views;
 		}
 
 		if (!tracks.empty()) {
 			/* no region selected or entered, but some selected tracks:
 			 * act on all regions on the selected tracks at the edit point
-			 */ 
+			 */
 			framepos_t const where = get_preferred_edit_position ();
 			get_regions_at(regions, where, tracks);
 		}
@@ -4659,7 +4663,7 @@ void
 Editor::first_idle ()
 {
 	MessageDialog* dialog = 0;
-	
+
 	if (track_views.size() > 1) {
 		dialog = new MessageDialog (
 			*this,
@@ -5145,7 +5149,7 @@ Editor::reset_x_origin_to_follow_playhead ()
 		} else {
 
 			framepos_t l = 0;
-			
+
 			if (frame < leftmost_frame) {
 				/* moving left */
 				if (_session->transport_rolling()) {
@@ -5169,7 +5173,7 @@ Editor::reset_x_origin_to_follow_playhead ()
 			if (l < 0) {
 				l = 0;
 			}
-			
+
 			center_screen_internal (l + (current_page_frames() / 2), current_page_frames ());
 		}
 	}
@@ -5319,7 +5323,7 @@ Editor::session_going_away ()
 	clear_marker_display ();
 
 	stop_step_editing ();
-	
+
 	/* get rid of any existing editor mixer strip */
 
 	WindowTitle title(Glib::get_application_name());
@@ -5395,7 +5399,7 @@ Editor::setup_fade_images ()
 	_fade_out_images[FadeFast] = new Gtk::Image (get_icon_path (X_("fadeout-slow-cut")));
 	_fade_out_images[FadeSlow] = new Gtk::Image (get_icon_path (X_("fadeout-fast-cut")));
 	_fade_out_images[FadeConstantPower] = new Gtk::Image (get_icon_path (X_("fadeout-long-cut")));
-	
+
 	_xfade_in_images[FadeLinear] = new Gtk::Image (get_icon_path (X_("fadeout-linear")));
 	_xfade_in_images[FadeSymmetric] = new Gtk::Image (get_icon_path (X_("fadeout-short-cut")));
 	_xfade_in_images[FadeFast] = new Gtk::Image (get_icon_path (X_("fadeout-slow-cut")));
@@ -5466,10 +5470,10 @@ void
 Editor::popup_control_point_context_menu (ArdourCanvas::Item* item, GdkEvent* event)
 {
 	using namespace Menu_Helpers;
-	
+
 	MenuList& items = _control_point_context_menu.items ();
 	items.clear ();
-	
+
 	items.push_back (MenuElem (_("Edit..."), sigc::bind (sigc::mem_fun (*this, &Editor::edit_control_point), item)));
 	items.push_back (MenuElem (_("Delete"), sigc::bind (sigc::mem_fun (*this, &Editor::remove_control_point), item)));
 	if (!can_remove_control_point (item)) {

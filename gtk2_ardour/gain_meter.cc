@@ -136,7 +136,7 @@ GainMeterBase::GainMeterBase (Session* s, bool horizontal, int fader_length, int
 	UI::instance()->theme_changed.connect (sigc::mem_fun(*this, &GainMeterBase::on_theme_changed));
 	ColorsChanged.connect (sigc::bind(sigc::mem_fun (*this, &GainMeterBase::color_handler), false));
 	DPIReset.connect (sigc::bind(sigc::mem_fun (*this, &GainMeterBase::color_handler), true));
-	
+
 //	PBD::ScopedConnection _config_connection;
 //	Config->ParameterChanged.connect ( _config_connection, MISSING_INVALIDATOR, boost::bind(&GainMeterBase::set_flat_buttons, this, _1), gui_context() );
 }
@@ -254,7 +254,7 @@ GainMeterBase::setup_gain_adjustment ()
 	ignore_toggle = false;
 
 	effective_gain_display ();
-	
+
 	_previous_amp_output_streams = _amp->output_streams ();
 }
 
@@ -493,7 +493,7 @@ GainMeterBase::gain_adjusted ()
 	} else {
 		value = gain_adjustment.get_value();
 	}
-	
+
 	if (!ignore_toggle) {
 		if (_route && _route->amp() == _amp) {
 			_route->set_gain (value, this);
@@ -1076,7 +1076,8 @@ GainMeterBase::get_controllable()
 bool
 GainMeterBase::level_meter_button_press (GdkEventButton* ev)
 {
-	return LevelMeterButtonPress (ev); /* EMIT SIGNAL */
+	if (LevelMeterButtonPress (ev)) return true; /* EMIT SIGNAL */ // TODO!!!!
+	return false;
 }
 
 void
